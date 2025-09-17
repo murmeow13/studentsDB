@@ -15,7 +15,9 @@ jobs:
       uses: actions/checkout@v4
     
     - name: Install dependencies
-      run: sudo apt-get update && sudo apt-get install -y g++ lcov
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y g++ lcov make
     
     - name: Run tests
       run: make run-tests
@@ -33,3 +35,4 @@ jobs:
       run: |
         echo "✅ Tests completed successfully!"
         echo "📊 Coverage report generated in coverage/ directory"
+        echo "📁 Artifacts available for download"
