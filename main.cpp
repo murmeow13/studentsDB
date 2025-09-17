@@ -1,7 +1,7 @@
 #include <iostream>
 #include <vector>
 #include <string>
-#include <algorithm> 
+#include <algorithm>
 
 struct Student {
     std::string name;
@@ -9,7 +9,6 @@ struct Student {
     std::string major;
     double gpa;
 };
-
 
 void addStudent(std::vector<Student>& database) {
     Student student;
@@ -25,6 +24,7 @@ void addStudent(std::vector<Student>& database) {
     database.push_back(student);
     std::cout << "Student added to database.\n";
 }
+
 
 void displayStudents(const std::vector<Student>& database) {
     std::cout << "List of students:\n";
@@ -52,6 +52,24 @@ void sortByNameDesc(std::vector<Student>& database) {
     std::cout << "Students sorted by name (Z-A).\n";
 }
 
+
+void sortByGPA(std::vector<Student>& database) {
+    std::sort(database.begin(), database.end(), 
+        [](const Student& a, const Student& b) {
+            return a.gpa < b.gpa;
+        });
+    std::cout << "Students sorted by GPA (ascending).\n";
+}
+
+
+void sortByGPADesc(std::vector<Student>& database) {
+    std::sort(database.begin(), database.end(), 
+        [](const Student& a, const Student& b) {
+            return a.gpa > b.gpa;
+        });
+    std::cout << "Students sorted by GPA (descending).\n";
+}
+
 int main() {
     std::vector<Student> database;
 
@@ -62,6 +80,8 @@ int main() {
         std::cout << "2. Display students\n";
         std::cout << "3. Sort by name (A-Z)\n";
         std::cout << "4. Sort by name (Z-A)\n";
+        std::cout << "5. Sort by GPA (ascending)\n";
+        std::cout << "6. Sort by GPA (descending)\n";
         std::cout << "0. Exit\n";
         std::cout << "Choose action: ";
         std::cin >> choice;
@@ -78,6 +98,12 @@ int main() {
                 break;
             case 4:
                 sortByNameDesc(database);
+                break;
+            case 5:
+                sortByGPA(database);
+                break;
+            case 6:
+                sortByGPADesc(database);
                 break;
             case 0:
                 std::cout << "Exiting program.\n";
