@@ -1,0 +1,35 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    
+    - name: Install dependencies
+      run: sudo apt-get update && sudo apt-get install -y g++ lcov
+    
+    - name: Run tests
+      run: make run-tests
+    
+    - name: Generate coverage
+      run: make coverage
+    
+    - name: Upload coverage artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: coverage-report
+        path: coverage/
+    
+    - name: Test Summary
+      run: |
+        echo "✅ Tests completed successfully!"
+        echo "📊 Coverage report generated in coverage/ directory"
