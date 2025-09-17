@@ -15,7 +15,7 @@ RED = \033[0;31m
 BLUE = \033[0;34m
 NC = \033[0m # No Color
 
-.PHONY: all program tests coverage clean install help
+.PHONY: all program tests run-tests coverage coverage-html install clean help ci
 
 all: program tests
 
