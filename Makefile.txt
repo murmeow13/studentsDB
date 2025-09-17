@@ -1,4 +1,90 @@
-all:
-	g++ -std=c++20 main.cpp -o a.out
+# Makefile for Student Database with Test Coverage
+CXX = g++
+CXXFLAGS = -std=c++11 -Wall -Wextra -pedantic
+TEST_FLAGS = -DTEST_MODE
+COVERAGE_FLAGS = --coverage
+PROGRAM = student_db
+TEST_EXEC = student_tests
+COVERAGE_DIR = coverage
+SOURCE = student_database.cpp
+
+# Colors for better visibility
+GREEN = \033[0;32m
+YELLOW = \033[0;33m
+RED = \033[0;31m
+BLUE = \033[0;34m
+NC = \033[0m # No Color
+
+.PHONY: all program tests coverage clean install help
+
+all: program tests
+
+program:
+	@echo "$(BLUE)Building main program...$(NC)"
+	$(CXX) $(CXXFLAGS) -o $(PROGRAM) $(SOURCE)
+	@echo "$(GREEN)✓ Program built successfully: $(PROGRAM)$(NC)"
+
+tests:
+	@echo "$(BLUE)Building tests...$(NC)"
+	$(CXX) $(CXXFLAGS) $(TEST_FLAGS) -o $(TEST_EXEC) $(SOURCE)
+	@echo "$(GREEN)✓ Tests built successfully: $(TEST_EXEC)$(NC)"
+
+run-tests: tests
+	@echo "$(YELLOW)Running all tests...$(NC)"
+	@./$(TEST_EXEC) || (echo "$(RED)❌ Tests failed!$(NC)" && exit 1)
+	@echo "$(GREEN)✅ All tests passed!$(NC)"
+
+coverage: CXXFLAGS += $(COVERAGE_FLAGS)
+coverage: clean tests
+	@echo "$(BLUE)Running tests with coverage...$(NC)"
+	@mkdir -p $(COVERAGE_DIR)
+	@./$(TEST_EXEC) > /dev/null 2>&1
+	@gcov $(SOURCE) > /dev/null 2>&1
+	@mv *.gcov $(COVERAGE_DIR)/
+	@echo "$(GREEN)✓ Coverage generated in $(COVERAGE_DIR)/ directory$(NC)"
+	@echo "$(YELLOW)Coverage summary:$(NC)"
+	@echo "================================"
+	@gcov -n $(SOURCE) | grep -E "Lines executed:|File" | sed 's/^/  /'
+	@echo "================================"
+
+coverage-html: coverage
+	@echo "$(BLUE)Generating HTML coverage report...$(NC)"
+	@lcov --capture --directory . --output-file $(COVERAGE_DIR)/coverage.info
+	@genhtml $(COVERAGE_DIR)/coverage.info --output-directory $(COVERAGE_DIR)/html
+	@echo "$(GREEN)✓ HTML coverage report generated: $(COVERAGE_DIR)/html/index.html$(NC)"
+
+install:
+	@echo "$(BLUE)Installing dependencies...$(NC)"
+	@if command -v apt-get >/dev/null 2>&1; then \
+		sudo apt-get update && sudo apt-get install -y gcc g++ lcov; \
+	elif command -v yum >/dev/null 2>&1; then \
+		sudo yum install -y gcc-c++ lcov; \
+	elif command -v brew >/dev/null 2>&1; then \
+		brew install gcc lcov; \
+	else \
+		echo "$(YELLOW)Please install g++, lcov manually$(NC)"; \
+	fi
+	@echo "$(GREEN)✓ Dependencies installed$(NC)"
+
 clean:
-	rm a.out
+	@echo "$(BLUE)Cleaning up...$(NC)"
+	@rm -rf $(PROGRAM) $(TEST_EXEC) $(COVERAGE_DIR) *.gcov *.gcda *.gcno
+	@echo "$(GREEN)✓ Clean completed$(NC)"
+
+help:
+	@echo "$(YELLOW)Student Database Makefile Commands:$(NC)"
+	@echo "  make all        - Build program and tests"
+	@echo "  make program    - Build main program only"
+	@echo "  make tests      - Build tests only"
+	@echo "  make run-tests  - Build and run tests"
+	@echo "  make coverage   - Generate test coverage report"
+	@echo "  make coverage-html - Generate HTML coverage report"
+	@echo "  make install    - Install dependencies"
+	@echo "  make clean      - Clean build artifacts"
+	@echo "  make help       - Show this help message"
+
+# GitHub Actions will look for this target
+ci: install run-tests coverage
+
+# Default target
+.DEFAULT_GOAL := help
