@@ -9,30 +9,30 @@ struct Student {
     double gpa;
 };
 
-// Функция для добавления студента в базу данных
+// Function to add a student to the database
 void addStudent(std::vector<Student>& database) {
     Student student;
-    std::cout << "Введите имя студента: ";
+    std::cout << "Enter student name: ";
     std::cin >> student.name;
-    std::cout << "Введите возраст студента: ";
+    std::cout << "Enter student age: ";
     std::cin >> student.age;
-    std::cout << "Введите специальность студента: ";
+    std::cout << "Enter student major: ";
     std::cin >> student.major;
-    std::cout << "Введите средний балл студента: ";
+    std::cout << "Enter student GPA: ";
     std::cin >> student.gpa;
 
     database.push_back(student);
-    std::cout << "Студент добавлен в базу данных.\n";
+    std::cout << "Student added to database.\n";
 }
 
-// Функция для вывода всех студентов из базы данных
+// Function to display all students from the database
 void displayStudents(const std::vector<Student>& database) {
-    std::cout << "Список студентов:\n";
+    std::cout << "List of students:\n";
     for (const Student& student : database) {
-        std::cout << "Имя: " << student.name << "\n";
-        std::cout << "Возраст: " << student.age << "\n";
-        std::cout << "Специальность: " << student.major << "\n";
-        std::cout << "Средний балл: " << student.gpa << "\n\n";
+        std::cout << "Name: " << student.name << "\n";
+        std::cout << "Age: " << student.age << "\n";
+        std::cout << "Major: " << student.major << "\n";
+        std::cout << "GPA: " << student.gpa << "\n\n";
     }
 }
 
@@ -41,11 +41,11 @@ int main() {
 
     int choice;
     do {
-        std::cout << "Меню:\n";
-        std::cout << "1. Добавить студента\n";
-        std::cout << "2. Вывести список студентов\n";
-        std::cout << "0. Выход\n";
-        std::cout << "Выберите действие: ";
+        std::cout << "Menu:\n";
+        std::cout << "1. Add student\n";
+        std::cout << "2. Display students\n";
+        std::cout << "0. Exit\n";
+        std::cout << "Choose action: ";
         std::cin >> choice;
 
         switch (choice) {
@@ -56,10 +56,10 @@ int main() {
                 displayStudents(database);
                 break;
             case 0:
-                std::cout << "Выход из программы.\n";
+                std::cout << "Exiting program.\n";
                 break;
             default:
-                std::cout << "Неверный выбор. Попробуйте снова.\n";
+                std::cout << "Invalid choice. Please try again.\n";
         }
     } while (choice != 0);
 
