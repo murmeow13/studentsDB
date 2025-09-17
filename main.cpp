@@ -1,6 +1,7 @@
 #include <iostream>
 #include <vector>
 #include <string>
+#include <algorithm> 
 
 struct Student {
     std::string name;
@@ -9,7 +10,7 @@ struct Student {
     double gpa;
 };
 
-// Function to add a student to the database
+
 void addStudent(std::vector<Student>& database) {
     Student student;
     std::cout << "Enter student name: ";
@@ -25,7 +26,6 @@ void addStudent(std::vector<Student>& database) {
     std::cout << "Student added to database.\n";
 }
 
-// Function to display all students from the database
 void displayStudents(const std::vector<Student>& database) {
     std::cout << "List of students:\n";
     for (const Student& student : database) {
@@ -36,6 +36,22 @@ void displayStudents(const std::vector<Student>& database) {
     }
 }
 
+void sortByName(std::vector<Student>& database) {
+    std::sort(database.begin(), database.end(), 
+        [](const Student& a, const Student& b) {
+            return a.name < b.name;
+        });
+    std::cout << "Students sorted by name (A-Z).\n";
+}
+
+void sortByNameDesc(std::vector<Student>& database) {
+    std::sort(database.begin(), database.end(), 
+        [](const Student& a, const Student& b) {
+            return a.name > b.name;
+        });
+    std::cout << "Students sorted by name (Z-A).\n";
+}
+
 int main() {
     std::vector<Student> database;
 
@@ -44,6 +60,8 @@ int main() {
         std::cout << "Menu:\n";
         std::cout << "1. Add student\n";
         std::cout << "2. Display students\n";
+        std::cout << "3. Sort by name (A-Z)\n";
+        std::cout << "4. Sort by name (Z-A)\n";
         std::cout << "0. Exit\n";
         std::cout << "Choose action: ";
         std::cin >> choice;
@@ -54,6 +72,12 @@ int main() {
                 break;
             case 2:
                 displayStudents(database);
+                break;
+            case 3:
+                sortByName(database);
+                break;
+            case 4:
+                sortByNameDesc(database);
                 break;
             case 0:
                 std::cout << "Exiting program.\n";
