@@ -2,6 +2,7 @@
 #include <vector>
 #include <string>
 #include <algorithm>
+#include <iomanip> 
 
 struct Student {
     std::string name;
@@ -26,13 +27,25 @@ void addStudent(std::vector<Student>& database) {
 }
 
 void displayStudents(const std::vector<Student>& database) {
-    std::cout << "List of students:\n";
-    for (const Student& student : database) {
-        std::cout << "Name: " << student.name << "\n";
-        std::cout << "Age: " << student.age << "\n";
-        std::cout << "Major: " << student.major << "\n";
-        std::cout << "GPA: " << student.gpa << "\n\n";
+    if (database.empty()) {
+        std::cout << "Database is empty.\n";
+        return;
     }
+    
+    std::cout << "\nList of students:\n";
+    std::cout << std::setw(15) << std::left << "Name"
+              << std::setw(8) << "Age"
+              << std::setw(15) << "Major"
+              << std::setw(12) << "GPA" << "\n";
+    std::cout << std::string(50, '-') << "\n";
+    
+    for (const Student& student : database) {
+        std::cout << std::setw(15) << std::left << student.name
+                  << std::setw(8) << student.age
+                  << std::setw(15) << student.major
+                  << std::setw(12) << std::fixed << std::setprecision(2) << student.gpa << "\n";
+    }
+    std::cout << "\n";
 }
 
 void sortByName(std::vector<Student>& database) {
@@ -68,6 +81,11 @@ void sortByGPADesc(std::vector<Student>& database) {
 }
 
 void showSortMenu(std::vector<Student>& database) {
+    if (database.empty()) {
+        std::cout << "Database is empty. Nothing to sort.\n";
+        return;
+    }
+    
     int sortChoice;
     do {
         std::cout << "\nSorting Menu:\n";
